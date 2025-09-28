@@ -11,6 +11,8 @@ from nuscenes.nuscenes import NuScenes
 from nuscenes.utils.geometry_utils import view_points
 from pyquaternion import Quaternion
 from shapely.geometry import MultiPoint, box
+from nusc_geosplit import GEO_TRAIN_SCENES, GEO_VAL_SCENES
+import argparse
 
 nus_categories = ('car', 'truck', 'trailer', 'bus', 'construction_vehicle',
                   'bicycle', 'motorcycle', 'pedestrian', 'traffic_cone',
@@ -21,12 +23,30 @@ nus_attributes = ('cycle.with_rider', 'cycle.without_rider',
                   'pedestrian.sitting_lying_down', 'vehicle.moving',
                   'vehicle.parked', 'vehicle.stopped', 'None')
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Data converter arg parser')
+    parser.add_argument(
+        '--data-root',
+        type=str,
+        help='specify the root path of dataset')
+    parser.add_argument(
+        '--info-prefix', 
+        type=str,
+        help='Prefix of the output pkl files')
+    parser.add_argument(
+        '--geosplit',
+        action='store_true')
+    
+    args = parser.parse_args()
+    return args
+
 
 def create_nuscenes_infos(root_path,
                           info_prefix,
                           dest_path=None,
                           version='v1.0-trainval',
-                          max_sweeps=10):
+                          max_sweeps=10,
+                          geosplit=False):
     """Create info file of nuscene dataset.
 
     Given the raw data, generate its related info file in pkl format.
@@ -55,6 +75,10 @@ def create_nuscenes_infos(root_path,
         val_scenes = splits.mini_val
     else:
         raise ValueError('unknown')
+
+    if geosplit:
+        train_scenes = GEO_TRAIN_SCENES
+        val_scenes = GEO_VAL_SCENES
 
     # filter existing scenes.
     available_scenes = get_available_scenes(nusc)
@@ -631,11 +655,13 @@ def generate_record(ann_rec: dict, x1: float, y1: float, x2: float, y2: float,
 
 
 if __name__ == '__main__':
-    create_nuscenes_infos(root_path='/mnt/datasets/nuScenes/',
-                          version='v1.0-trainval',
-                          info_prefix='nuScences_map_trainval',
-                          dest_path='/mnt/datasets/nuScenes/',
-                          max_sweeps=1)
+    args = parse_args()
+    
+    # NOTE: use args instead of hardcoded values
+    create_nuscenes_infos(root_path=args.data_root,
+                          info_prefix=args.info_prefix,
+                          max_sweeps=1,
+                          geosplit=args.geosplit)
 
     # debug dataset
     # create_nuscenes_infos(root_path='/mnt/datasets/nuScenes/',

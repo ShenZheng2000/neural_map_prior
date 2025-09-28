@@ -13,22 +13,43 @@ from tqdm import tqdm
 bev_real_h = 30
 bev_real_w = 60
 bev_radius = np.sqrt(bev_real_h ** 2 + bev_real_w ** 2) / 2
-train_min_geo_loc = {'singapore-onenorth': np.array([118., 420.]) - bev_radius,
-                     'boston-seaport': np.array([298., 328.]) - bev_radius,
-                     'singapore-queenstown': np.array([347., 862.]) - bev_radius,
-                     'singapore-hollandvillage': np.array([442., 902.]) - bev_radius}
-train_max_geo_loc = {'singapore-onenorth': np.array([1232., 1777.]) + bev_radius,
-                     'boston-seaport': np.array([2527., 1896.]) + bev_radius,
-                     'singapore-queenstown': np.array([2686., 3298.]) + bev_radius,
-                     'singapore-hollandvillage': np.array([2490., 2839.]) + bev_radius}
-val_min_geo_loc = {'singapore-onenorth': np.array([118., 408.]) - bev_radius,
-                   'boston-seaport': np.array([412., 555.]) - bev_radius,
-                   'singapore-queenstown': np.array([524., 871.]) - bev_radius,
-                   'singapore-hollandvillage': np.array([608., 2007.]) - bev_radius}
-val_max_geo_loc = {'singapore-onenorth': np.array([1232., 1732.]) + bev_radius,
-                   'boston-seaport': np.array([2367., 1720.]) + bev_radius,
-                   'singapore-queenstown': np.array([2044., 3333.]) + bev_radius,
-                   'singapore-hollandvillage': np.array([2460., 2836.]) + bev_radius}
+# train_min_geo_loc = {'singapore-onenorth': np.array([118., 420.]) - bev_radius,
+#                      'boston-seaport': np.array([298., 328.]) - bev_radius,
+#                      'singapore-queenstown': np.array([347., 862.]) - bev_radius,
+#                      'singapore-hollandvillage': np.array([442., 902.]) - bev_radius}
+# train_max_geo_loc = {'singapore-onenorth': np.array([1232., 1777.]) + bev_radius,
+#                      'boston-seaport': np.array([2527., 1896.]) + bev_radius,
+#                      'singapore-queenstown': np.array([2686., 3298.]) + bev_radius,
+#                      'singapore-hollandvillage': np.array([2490., 2839.]) + bev_radius}
+# val_min_geo_loc = {'singapore-onenorth': np.array([118., 408.]) - bev_radius,
+#                    'boston-seaport': np.array([412., 555.]) - bev_radius,
+#                    'singapore-queenstown': np.array([524., 871.]) - bev_radius,
+#                    'singapore-hollandvillage': np.array([608., 2007.]) - bev_radius}
+# val_max_geo_loc = {'singapore-onenorth': np.array([1232., 1732.]) + bev_radius,
+#                    'boston-seaport': np.array([2367., 1720.]) + bev_radius,
+#                    'singapore-queenstown': np.array([2044., 3333.]) + bev_radius,
+#                    'singapore-hollandvillage': np.array([2460., 2836.]) + bev_radius}
+
+# Update with a larger boundaries, so that it can cover geos-split dataset
+
+# === Universal per-city bounds (computed using min(train,val), max(train,val)) ===
+train_min_geo_loc = {
+    'singapore-onenorth': np.array([118., 408.]) - bev_radius,
+    'boston-seaport': np.array([298., 328.]) - bev_radius,
+    'singapore-queenstown': np.array([347., 862.]) - bev_radius,
+    'singapore-hollandvillage': np.array([442., 902.]) - bev_radius,
+}
+train_max_geo_loc = {
+    'singapore-onenorth': np.array([1232., 1777.]) + bev_radius,
+    'boston-seaport': np.array([2527., 1896.]) + bev_radius,
+    'singapore-queenstown': np.array([2686., 3333.]) + bev_radius,
+    'singapore-hollandvillage': np.array([2490., 2839.]) + bev_radius,
+}
+
+# reuse the same for val
+val_min_geo_loc = train_min_geo_loc
+val_max_geo_loc = train_max_geo_loc
+
 
 city_min_geo_loc = {}
 for cn, geo_min in train_min_geo_loc.items():

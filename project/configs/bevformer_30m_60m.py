@@ -12,6 +12,7 @@ plugin_dir = 'project/neural_map_prior/'
 # find_unused_parameters = False
 # sync_bn = True
 
+eval_save_dir = './work_dirs/bevformer_30m_60m/eval_results/'
 
 # data root and data info path for dataset
 version = 'trainval'  # 'mini' or 'trainval'
@@ -182,6 +183,7 @@ model = dict(
         embedded_dim=16,
         direction_pred=True,
         direction_dim=36 + 1,
+        save_dir=eval_save_dir,
     ),
     loss_cfg=dict(
         type='HdmapnetLoss',

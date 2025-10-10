@@ -42,9 +42,13 @@ class BevEncode(nn.Module):
                  embedded_dim=16,
                  direction_pred=True,
                  direction_dim=37,
-                 return_feature=False):
+                 return_feature=False,
+                 save_dir=None):
 
         super(BevEncode, self).__init__()
+
+        self.save_dir = save_dir
+
         # trunk = resnet18(pretrained=False, zero_init_residual=True)
         # self.conv1 = nn.Conv2d(inC, 64, kernel_size=7, stride=2, padding=3,
         #                       bias=False)
@@ -233,7 +237,11 @@ class BevEncode(nn.Module):
             pred_map = pred_map[1:].detach().cpu().numpy()
 
             # save_dir = '/home/xiongx/repository/marsmap/results_cvpr/lss_final'
-            save_dir = '/home/xiongx/repository/marsmap/results_cvpr/bevformer_fianl_night'
+            # save_dir = '/home/xiongx/repository/marsmap/results_cvpr/bevformer_fianl_night'
+            # os.makedirs(save_dir, exist_ok=True)
+
+            assert self.save_dir is not None, "Please set save_dir for evaluation!"
+            save_dir = self.save_dir
             os.makedirs(save_dir, exist_ok=True)
             torch.save(pred_map.astype(np.uint8), os.path.join(save_dir, tokens[i]))
 

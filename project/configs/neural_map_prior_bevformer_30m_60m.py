@@ -12,6 +12,7 @@ plugin_dir = 'project/neural_map_prior/'
 find_unused_parameters = True
 # sync_bn = True
 
+eval_save_dir = './work_dirs/neural_map_prior_bevformer_30m_60m/eval_results/'
 
 # data root and data info path for dataset
 version = 'trainval'  # 'mini' or 'trainval'
@@ -101,6 +102,7 @@ bevformer_cfg = dict(
 )
 
 map_attribute = {
+     # TODO: fix this hardcode path
     'root_dir': '/localdata_ssd/map_slices/raster_global_map',
     'type': 'rasterized',
     'prefix': 'map_large_reso_gru_cpu',
@@ -221,6 +223,7 @@ model = dict(
         embedded_dim=16,
         direction_pred=True,
         direction_dim=36 + 1,
+        save_dir=eval_save_dir,
     ),
     loss_cfg=dict(
         type='HdmapnetLoss',
@@ -377,6 +380,7 @@ evaluation = dict(interval=1)
 
 runner = dict(type='EpochBasedRunner', max_epochs=24)
 
-load_from = '/oldhome/xiongx/repository/neural_map_prior_code/work_dirs/bevformer_30m_60m/epoch_24.pth'
+# load_from = '/oldhome/xiongx/repository/neural_map_prior_code/work_dirs/bevformer_30m_60m/epoch_24.pth'
+load_from = "work_dirs/bevformer_30m_60m/epoch_24.pth"
 
 file_client_args = dict(backend='disk')
